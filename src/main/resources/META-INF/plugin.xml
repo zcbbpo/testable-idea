@@ -1,0 +1,45 @@
+<idea-plugin>
+    <id>org.testable.idea.testable-idea</id>
+    <name>Plugin display name here</name>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    Enter short description for your plugin here.<br>
+    rtttttttttttttttttttttttttttå
+    <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <!--<psi.referenceContributor implementation="org.testable.idea.ext.ExtAbc"/>-->
+        <psi.referenceContributor implementation="org.testable.idea.s.SimpleReferenceContributor"/>
+        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.MockReferenceAnnotator"/>
+
+        <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>
+
+        <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
+        <!--<lang.findUsagesProvider language="JAVA"
+                                 implementationClass="org.testable.idea.provider.FindTestMethodUsagesProvider"/>-->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="org.testable.idea.action.AutoGenerationTestCaseAction" class="org.testable.idea.action.AutoGenerationTestCaseAction" text="生成Testable测试类"
+                description="Testable auto generation testcase">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="orggg" class="ABAction" text="卡黄" description="fagegea">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
