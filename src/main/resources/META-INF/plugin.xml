@@ -20,7 +20,7 @@
         <!-- Add your extensions here -->
         <!--<psi.referenceContributor implementation="org.testable.idea.ext.ExtAbc"/>-->
         <psi.referenceContributor implementation="org.testable.idea.s.SimpleReferenceContributor"/>
-        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.MockReferenceAnnotator"/>
+        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>
 
         <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>
 

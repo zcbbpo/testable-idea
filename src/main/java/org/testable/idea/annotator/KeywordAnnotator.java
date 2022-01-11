@@ -18,20 +18,40 @@ import java.util.Arrays;
 /**
  * @author jim
  */
-public class MockReferenceAnnotator implements Annotator {
-
+public class KeywordAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        if (! (element instanceof PsiAnnotation)) {
-            return;
-        }
-        PsiAnnotation psiAnnotation = (PsiAnnotation)element;
-        String qualifiedName = psiAnnotation.getQualifiedName();
-        if (!StringUtils.equals(MockInvoke.class.getCanonicalName(), qualifiedName)) {
+        if (!(element instanceof PsiMethod)) {
             return;
         }
 
-        PsiAnnotationParameterList parameterList = psiAnnotation.getParameterList();
+        PsiMethod psiMethod = (PsiMethod) element;
+
+        PsiAnnotation[] annotations = psiMethod.getAnnotations();
+        Arrays.stream(annotations)
+                .filter(this::isMockInvokeAnnotation)
+                .findFirst()
+                .ifPresent(annotation -> {
+                    addStyleForAnnotation(annotation, holder);
+                    addStyleForMethodName(psiMethod, holder);
+                });
+    }
+
+    private boolean isMockInvokeAnnotation(PsiAnnotation annotation) {
+        String qualifiedName = annotation.getQualifiedName();
+        return StringUtils.equals(MockInvoke.class.getCanonicalName(), qualifiedName);
+    }
+
+    private void addStyleForMethodName(PsiMethod psiMethod, AnnotationHolder holder) {
+        PsiIdentifier nameIdentifier = psiMethod.getNameIdentifier();
+        if (nameIdentifier == null) {
+            return;
+        }
+        setStyle(nameIdentifier, holder);
+    }
+
+    private void addStyleForAnnotation(PsiAnnotation annotation, AnnotationHolder holder) {
+        PsiAnnotationParameterList parameterList = annotation.getParameterList();
         PsiNameValuePair[] attributes = parameterList.getAttributes();
         PsiNameValuePair targetMethod = Arrays.stream(attributes)
                 .filter(v -> v.getNameIdentifier() != null)
@@ -42,9 +62,6 @@ public class MockReferenceAnnotator implements Annotator {
             return;
         }
 
-        // Define the text ranges (start is inclusive, end is exclusive)
-        // "simple:key"
-        //  01234567890
         PsiAnnotationMemberValue targetValue = targetMethod.getValue();
         if (targetValue == null) {
             return;
@@ -53,7 +70,14 @@ public class MockReferenceAnnotator implements Annotator {
             return;
         }
         PsiLiteralExpression targetLiteral = (PsiLiteralExpression) targetValue;
-        TextRange prefixRange = TextRange.from(targetLiteral.getTextRange().getStartOffset(), targetLiteral.getTextRange().getLength());
+        setStyle(targetLiteral, holder);
+    }
+
+    private void setStyle(PsiElement psiElement, AnnotationHolder holder) {
+        if (psiElement == null) {
+            return;
+        }
+        TextRange prefixRange = TextRange.from(psiElement.getTextRange().getStartOffset(), psiElement.getTextRange().getLength());
 
         TextAttributesKey textAttributesKey = TextAttributesKey.createTextAttributesKey("MY_VAR", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
 
