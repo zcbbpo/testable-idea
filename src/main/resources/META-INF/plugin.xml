@@ -41,5 +41,9 @@
         <action id="orggg" class="ABAction" text="卡黄" description="fagegea">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
+        <action id="signature" class="org.testable.idea.action.CopyMethodSignatureAction" text="复制方法Mock签名"
+                description="copy method signature">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
     </actions>
 </idea-plugin>

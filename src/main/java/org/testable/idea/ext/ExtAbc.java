@@ -5,6 +5,8 @@ import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * @author jim
  */
@@ -23,5 +25,9 @@ public class ExtAbc extends PsiReferenceContributor {
         } catch (ClassNotFoundException e) {
             //Ok, then. Some JetBrains platform IDE that has no Java support.
         }*/
+    }
+
+    public void ff() {
+        List l = null;
     }
 }

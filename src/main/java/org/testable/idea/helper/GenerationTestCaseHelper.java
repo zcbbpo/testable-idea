@@ -97,7 +97,7 @@ public class GenerationTestCaseHelper {
                 });
     }
 
-    private void generationTestFile(PsiClass bizService, VirtualFile testVirtualFile) throws IOException {
+    public void generationTestFile(PsiClass bizService, VirtualFile testVirtualFile) throws IOException {
         String qualifiedName = bizService.getQualifiedName();
         String simpleClassName = ClassNameUtils.getClassNameFromClassFullName(qualifiedName);
         PsiMethod[] methods = bizService.getMethods();
@@ -120,27 +120,32 @@ public class GenerationTestCaseHelper {
         javaFile.writeToPath(Paths.get(testVirtualFile.getPath()));
     }
 
-    private List<MethodSpec> transformMethod(PsiMethod[] methods, String targetClassName) {
+    public List<MethodSpec> transformMethod(PsiMethod[] methods, String targetClassName) {
 
         return Arrays.stream(methods)
                 //.filter(v -> !v.getModifierList().hasModifierProperty(PsiModifier.NATIVE))
-                .map(v -> {
-                    TypeName returnType = Optional.ofNullable(v.getReturnType())
-                            .map(JavaPoetClassNameUtils::guessType)
-                            .orElse(TypeName.VOID);
-                    AnnotationSpec mockInvokeAnnotation = AnnotationSpec.builder(MockInvoke.class)
-                            .addMember("targetClass", CodeBlock.builder().add("$L.class", targetClassName).build())
-                            .addMember("targetMethod", CodeBlock.builder().add("$S", v.getName()).build())
-                            .build();
-                    return MethodSpec.methodBuilder(v.getName())
-                            .addAnnotation(mockInvokeAnnotation)
-                            .addParameters(transformParameter(v.getParameterList().getParameters()))
-                            .addCode(returnBody(returnType))
-                            .returns(returnType)
-                            .addModifiers(transformModifier(v.getModifierList()))
-                            .build();
-                })
+                .map(v -> transformMethod(v, targetClassName))
                 .collect(Collectors.toList());
+    }
+
+    public MethodSpec transformMethod(PsiMethod method, String targetClassName) {
+        TypeName returnType = Optional.ofNullable(method.getReturnType())
+                .map(JavaPoetClassNameUtils::guessType)
+                .orElse(TypeName.VOID);
+        String packageName = ClassNameUtils.getPackageNameFromClassFullName(targetClassName);
+        String classSimpleName = ClassNameUtils.getClassNameFromClassFullName(targetClassName);
+        ClassName targetClass = ClassName.get(packageName, classSimpleName);
+        AnnotationSpec mockInvokeAnnotation = AnnotationSpec.builder(MockInvoke.class)
+                .addMember("targetClass", CodeBlock.builder().add("$T.class", targetClass).build())
+                .addMember("targetMethod", CodeBlock.builder().add("$S", method.getName()).build())
+                .build();
+        return MethodSpec.methodBuilder(method.getName())
+                .addAnnotation(mockInvokeAnnotation)
+                .addParameters(transformParameter(method.getParameterList().getParameters()))
+                .addCode(returnBody(returnType))
+                .returns(returnType)
+                .addModifiers(transformModifier(method.getModifierList()))
+                .build();
     }
 
     private CodeBlock returnBody(TypeName returnType) {
@@ -165,7 +170,7 @@ public class GenerationTestCaseHelper {
         );
     }
 
-    private List<Modifier> transformModifier(PsiModifierList psiModifierList) {
+    public List<Modifier> transformModifier(PsiModifierList psiModifierList) {
         if (psiModifierList == null) {
             return Collections.emptyList();
         }

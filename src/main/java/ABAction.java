@@ -23,6 +23,9 @@ import com.intellij.psi.PsiField;
 import org.jetbrains.annotations.NotNull;
 import org.testable.idea.action.AutoGenerationTestCaseAction;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+
 public class ABAction extends AnAction {
 
     private static final Logger LOG = Logger.getInstance(ABAction.class);
@@ -30,6 +33,11 @@ public class ABAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
+        Clipboard systemClipboard = Toolkit.getDefaultToolkit()
+                .getSystemClipboard();
+        System.out.println(systemClipboard);
+        System.out.println(systemClipboard);
+
         // TODO: insert action logic here
        /* Project openProject = ProjectManager.getInstance().getOpenProjects()[0];
         Editor editor = FileEditorManager.getInstance(openProject).getSelectedTextEditor();
@@ -37,7 +45,7 @@ public class ABAction extends AnAction {
         FileEditor[] editors = FileEditorManager.getInstance(openProject).getAllEditors();
         FileEditor fileEditor = editors[0];
         VirtualFile file = fileEditor.getFile();*/
-        PsiElement element = (PsiElement) e.getDataContext().getData("psi.Element");
+        /*PsiElement element = (PsiElement) e.getDataContext().getData("psi.Element");
 
         if (element == null) {
             return;
@@ -52,7 +60,7 @@ public class ABAction extends AnAction {
         PsiField[] fields = psiClass.getFields();
         PsiField field = fields[0];
         PsiAnnotation[] annotations = field.getAnnotations();
-        PsiAnnotation annotation = annotations[0];
+        PsiAnnotation annotation = annotations[0];*/
     }
 
     @Override
