@@ -1,8 +1,7 @@
-package org.testable.idea.s;
+package org.testable.idea.ref;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.ui.EmptyIcon;
@@ -15,16 +14,12 @@ import java.util.List;
 /**
  * @author jim
  */
-public class SimpleReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
+public class MockInvokeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
 
-    private final String targetClass;
-    private final String targetMethod;
-    private List<PsiMethodCallExpression> psiMethodCallExpressions;
+    private final List<PsiMethodCallExpression> psiMethodCallExpressions;
 
-    public SimpleReference(@NotNull PsiElement element, TextRange textRange, String targetClass, String targetMethod) {
+    public MockInvokeReference(@NotNull PsiElement element, TextRange textRange, String targetClass, String targetMethod) {
         super(element, textRange);
-        this.targetClass = targetClass;
-        this.targetMethod = targetMethod;
         psiMethodCallExpressions = SearchMatchMethodHelper
                 .getInstance()
                 .queryMockMethod(myElement.getProject(), targetClass, targetMethod);

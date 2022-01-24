@@ -10,7 +10,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.SourceFolder;
@@ -18,7 +17,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import com.intellij.ui.GotItMessage;
 import com.squareup.javapoet.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -34,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Set;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,13 +79,7 @@ public class GenerationTestCaseHelper {
                 .postponeFormattingInside(() -> {
                     try {
                         generationTestFile(bizService, testVirtualFile);
-                        //openProject.getBaseDir().refresh(false,true);
-                        /*testRootUrls.forEach(v -> {
-                            v.refresh(false, true);
-                        });*/
                         VfsUtil.markDirtyAndRefresh(false, true, true, ProjectRootManager.getInstance(openProject).getContentRoots());
-
-                        //openProject.getProjectFile().refresh(false, true);
                         NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
                                 .createNotification(testJavaFile + "文件创建成功", NotificationType.INFORMATION)
                                 .notify(openProject);
@@ -109,7 +102,8 @@ public class GenerationTestCaseHelper {
                 .addModifiers(Modifier.PUBLIC)
                 .addType(TypeSpec.classBuilder("Mock")
                         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .addMethods(transformMethod(methods, simpleClassName))
+                        // not required generation the method ...
+                        //.addMethods(transformMethod(methods, simpleClassName))
                         .build()
                 )
                 .build();
@@ -123,7 +117,6 @@ public class GenerationTestCaseHelper {
     public List<MethodSpec> transformMethod(PsiMethod[] methods, String targetClassName) {
 
         return Arrays.stream(methods)
-                //.filter(v -> !v.getModifierList().hasModifierProperty(PsiModifier.NATIVE))
                 .map(v -> transformMethod(v, targetClassName))
                 .collect(Collectors.toList());
     }

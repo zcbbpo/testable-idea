@@ -1,12 +1,12 @@
 <idea-plugin>
     <id>org.testable.idea.testable-idea</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>Testable-mock helper</name>
+    <vendor email="jim.cao.jc@gmail.com" url="https://alibaba.github.io/testable-mock/">testable-mock</vendor>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    rtttttttttttttttttttttttttttå
-    <em>most HTML tags may be used</em>
+    An simple of testable-mock idea plugin.<br>
+    It's implements copy method for mock signature and navigate to mock method and auto geration test class template
+    <em>: )</em>
     ]]></description>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
@@ -18,15 +18,12 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <!--<psi.referenceContributor implementation="org.testable.idea.ext.ExtAbc"/>-->
-        <psi.referenceContributor implementation="org.testable.idea.s.SimpleReferenceContributor"/>
+        <psi.referenceContributor implementation="org.testable.idea.ref.MockInvokeReferenceContributor"/>
         <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>
 
         <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>
 
         <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
-        <!--<lang.findUsagesProvider language="JAVA"
-                                 implementationClass="org.testable.idea.provider.FindTestMethodUsagesProvider"/>-->
     </extensions>
 
     <actions>
@@ -37,9 +34,6 @@
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
             <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
-        <action id="orggg" class="ABAction" text="卡黄" description="fagegea">
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
         <action id="signature" class="org.testable.idea.action.CopyMethodSignatureAction" text="复制方法Mock签名"
                 description="copy method signature">
