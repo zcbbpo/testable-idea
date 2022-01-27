@@ -4,8 +4,8 @@
     <vendor email="jim.cao.jc@gmail.com" url="https://alibaba.github.io/testable-mock/">testable-mock</vendor>
 
     <description><![CDATA[
-    An simple of testable-mock idea plugin.<br>
-    It's implements copy method for mock signature and navigate to mock method and auto geration test class template
+    An simple testable-mock idea plugin.<br>
+    It implements method of copy mock signature, navigation to mock method and auto geration test class template
     <em>: )</em>
     ]]></description>
 
