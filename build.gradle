@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testable.idea'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -28,8 +28,11 @@ intellij {
 }
 patchPluginXml {
     changeNotes = """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      v1.0.0<br><ul>
+      <li>support copy mock signature</li>
+      <li>support navigate to mock method</li>
+      <li>support generate test class template</li>
+      </ul>"""
 }
 test {
     useJUnitPlatform()
