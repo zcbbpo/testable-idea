@@ -1,19 +1,16 @@
 package org.testable.idea.helper;
 
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiJvmMember;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.searches.AllClassesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -29,21 +26,10 @@ public class SearchMatchMethodHelper {
 
     public List<PsiMethodCallExpression> queryMockMethod(Project project, String targetClass, String targetMethod) {
 
-        // JavaPsiFacade.getInstance(...).findClass()
-        //MethodReferencesSearch
-        Collection<VirtualFile> containingFiles = FileBasedIndex.getInstance()
-                .getContainingFiles(
-                        FileTypeIndex.NAME,
-                        JavaFileType.INSTANCE,
-                        GlobalSearchScope.projectScope(project));
-
-        // PsiMethodCallExpression
-        return containingFiles.stream()
-                .map(v -> PsiManager.getInstance(project).findFile(v))
-                .filter(Objects::nonNull)
-                .filter(v -> v instanceof PsiJavaFile)
-                .map(v -> ((PsiJavaFile) v).getClasses())
-                .flatMap(Arrays::stream)
+        return AllClassesSearch.search(GlobalSearchScope.projectScope(project), project)
+                .allowParallelProcessing()
+                .findAll()
+                .stream()
                 .map(psiClass -> {
                     Collection<PsiMethodCallExpression> childrenOfAnyType = PsiTreeUtil.findChildrenOfAnyType(psiClass, PsiMethodCallExpression.class);
                     return childrenOfAnyType.stream()
@@ -56,7 +42,6 @@ public class SearchMatchMethodHelper {
                 })
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-
     }
 
 }

@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testable.idea'
-version '1.0-SNAPSHOT'
+version '1.3-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -28,8 +28,7 @@ intellij {
 }
 patchPluginXml {
     changeNotes = """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      Add search keywork.<br>"""
 }
 test {
     useJUnitPlatform()

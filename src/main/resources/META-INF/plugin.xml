@@ -4,10 +4,13 @@
     <vendor email="jim.cao.jc@gmail.com" url="https://alibaba.github.io/testable-mock/">testable-mock</vendor>
 
     <description><![CDATA[
-    An simple of testable-mock idea plugin.<br>
+    An simple of testable-mock idea plugin.<br/>
     It's implements copy method for mock signature and navigate to mock method and auto geration test class template
-    <em>: )</em>
     ]]></description>
+
+<!--
+    <change-notes>Initial release of the plugin.</change-notes>
+-->
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
