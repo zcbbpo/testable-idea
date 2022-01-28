@@ -22,7 +22,9 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <psi.referenceContributor implementation="org.testable.idea.ref.MockInvokeReferenceContributor"/>
+<!--
         <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>
+-->
 
         <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>
 
