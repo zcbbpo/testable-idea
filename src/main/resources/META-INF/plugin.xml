@@ -6,8 +6,11 @@
     <description><![CDATA[
     An simple testable-mock idea plugin.<br>
     It implements method of copy mock signature, navigate to mock method and auto generate test class template
-    <em>: )</em>
     ]]></description>
+
+<!--
+    <change-notes>Initial release of the plugin.</change-notes>
+-->
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
