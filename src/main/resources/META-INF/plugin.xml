@@ -1,7 +1,8 @@
-<idea-plugin>
+<idea-plugin require-restart="true">
     <id>org.testable.idea.testable-idea</id>
     <name>Testable-mock helper</name>
     <vendor email="jim.cao.jc@gmail.com" url="https://alibaba.github.io/testable-mock/">testable-mock</vendor>
+
 
     <description><![CDATA[
     An simple testable-mock idea plugin.<br>
@@ -22,9 +23,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <psi.referenceContributor implementation="org.testable.idea.ref.MockInvokeReferenceContributor"/>
-<!--
         <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>
--->
 
         <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>
 
