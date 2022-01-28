@@ -43,5 +43,9 @@
                 description="copy method signature">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
+        <action id="signatureTo" class="org.testable.idea.action.GenerateMethodToTestCaseAction" text="复制方法Mock签名到测试类"
+                description="copy method signature to test case">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
     </actions>
 </idea-plugin>

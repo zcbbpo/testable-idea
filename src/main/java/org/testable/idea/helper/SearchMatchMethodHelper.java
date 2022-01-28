@@ -27,7 +27,6 @@ public class SearchMatchMethodHelper {
     public List<PsiMethodCallExpression> queryMockMethod(Project project, String targetClass, String targetMethod) {
 
         return AllClassesSearch.search(GlobalSearchScope.projectScope(project), project)
-                .allowParallelProcessing()
                 .findAll()
                 .stream()
                 .map(psiClass -> {
