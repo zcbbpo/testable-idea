@@ -54,7 +54,7 @@ public class CopyMethodSignatureAction extends AnAction {
                 .build();
         copyText2Clipboard(editor, project, javaFile.toString());
         NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-                .createNotification(method.getName() + "Mock方法签名复制成功", NotificationType.INFORMATION)
+                .createNotification(method.getName() + " mock-method signature copied success", NotificationType.INFORMATION)
                 .notify(project);
     }
 

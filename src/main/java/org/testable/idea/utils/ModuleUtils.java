@@ -9,7 +9,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
-import org.testable.idea.helper.GenerationTestCaseHelper;
 
 import java.util.*;
 import java.util.stream.Collectors;

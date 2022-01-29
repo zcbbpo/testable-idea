@@ -1,6 +1,6 @@
 <idea-plugin require-restart="true">
     <id>org.testable.idea.testable-idea</id>
-    <name>Testable-mock helper</name>
+    <name>Testable-Mock Helper</name>
     <vendor email="jim.cao.jc@gmail.com" url="https://alibaba.github.io/testable-mock/">testable-mock</vendor>
 
 
@@ -30,22 +30,23 @@
         <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
     </extensions>
 
+    <resource-bundle>messages.BasicActionsBundle</resource-bundle>
     <actions>
+
         <!-- Add your actions here -->
-        <action id="org.testable.idea.action.AutoGenerationTestCaseAction" class="org.testable.idea.action.AutoGenerationTestCaseAction" text="生成Testable测试类"
-                description="Testable auto generation testcase">
+        <action id="org.testable.idea.action.AutoGenerationTestCaseAction" class="org.testable.idea.action.AutoGenerationTestCaseAction">
             <add-to-group group-id="MainToolBar" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
             <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="signature" class="org.testable.idea.action.CopyMethodSignatureAction" text="复制方法Mock签名"
-                description="copy method signature">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        <action id="org.testable.idea.action.CopyMethodSignatureAction" class="org.testable.idea.action.CopyMethodSignatureAction">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="meta M"/>
         </action>
-        <action id="signatureTo" class="org.testable.idea.action.GenerateMethodToTestCaseAction" text="复制方法Mock签名到测试类"
-                description="copy method signature to test case">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        <action id="org.testable.idea.action.GenerateMethodToTestCaseAction" class="org.testable.idea.action.GenerateMethodToTestCaseAction">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="meta T"/>
         </action>
     </actions>
 </idea-plugin>

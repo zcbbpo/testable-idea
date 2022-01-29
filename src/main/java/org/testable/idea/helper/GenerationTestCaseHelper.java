@@ -2,10 +2,9 @@ package org.testable.idea.helper;
 
 import com.alibaba.testable.core.annotation.MockInvoke;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -13,19 +12,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.squareup.javapoet.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 import org.testable.idea.utils.ClassNameUtils;
 import org.testable.idea.utils.JavaPoetClassNameUtils;
 
@@ -35,9 +28,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.*;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.intellij.testIntegration.createTest.CreateTestUtils.computeTestRoots;
@@ -82,31 +76,26 @@ public class GenerationTestCaseHelper {
             return;
         }
 
-        PostprocessReformattingAspect
-                .getInstance(openProject)
-                .postponeFormattingInside(() -> {
-                    try {
-                        generationTestFile(bizService, testVirtualFile, methods);
-                        VfsUtil.markDirtyAndRefresh(false, true, true, ProjectRootManager.getInstance(openProject).getContentRoots());
-                        NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-                                .createNotification(testJavaFile + "文件创建成功", NotificationType.INFORMATION)
-                                .notify(openProject);
-                        PsiClass testClass = JavaPsiFacade.getInstance(openProject).findClass(testJavaFile, GlobalSearchScope.projectScope(openProject));
-                        Optional.ofNullable(testClass)
-                                .map(PsiClass::getContainingFile)
-                                .map(PsiFile::getVirtualFile)
-                                .ifPresent(v ->
-                                        FileEditorManager.getInstance(openProject).openTextEditor(new OpenFileDescriptor(openProject, v), true));
-
-                        //EditSourceUtil.navigate();
-                    } catch (IOException e) {
-                        // TODO notify to user
-                        LOG.warn("Generation Testcase fail", e);
-                    }
-                });
+        WriteCommandAction.runWriteCommandAction(openProject, () -> {
+            try {
+                Path testFilePath = generationTestFile(bizService, testVirtualFile, methods);
+                VfsUtil.markDirtyAndRefresh(false, true, true, ProjectRootManager.getInstance(openProject).getContentRoots());
+                NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
+                        .createNotification(testJavaFile + " File created success", NotificationType.INFORMATION)
+                        .notify(openProject);
+                VirtualFile virtualFile = VfsUtil.findFile(testFilePath, true);
+                if (virtualFile != null) {
+                    FileEditorManager.getInstance(openProject).openTextEditor(new OpenFileDescriptor(openProject, virtualFile), true);
+                }
+                //EditSourceUtil.navigate();
+            } catch (IOException e) {
+                // TODO notify to user
+                LOG.warn("Generation Testcase fail", e);
+            }
+        });
     }
 
-    public void generationTestFile(PsiClass bizService, VirtualFile testVirtualFile, List<PsiMethod> selectMethodList) throws IOException {
+    public Path generationTestFile(PsiClass bizService, VirtualFile testVirtualFile, List<PsiMethod> selectMethodList) throws IOException {
         String qualifiedName = bizService.getQualifiedName();
         String simpleClassName = ClassNameUtils.getClassNameFromClassFullName(qualifiedName);
         PsiMethod[] methods = bizService.getMethods();
@@ -127,7 +116,7 @@ public class GenerationTestCaseHelper {
                 // indentation with 4 spaces
                 .indent("    ")
                 .build();
-        javaFile.writeToPath(Paths.get(testVirtualFile.getPath()));
+        return javaFile.writeToPath(Paths.get(testVirtualFile.getPath()));
     }
 
     public List<MethodSpec> transformMethod(PsiMethod[] methods, String targetClassName) {
