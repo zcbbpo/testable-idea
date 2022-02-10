@@ -158,9 +158,7 @@ public class GenerationTestCaseHelper {
                 .map(v -> Optional.of(v)
                         .map(PsiTypeParameter::getExtendsList)
                         .map(PsiReferenceList::getReferencedTypes)
-                        .map(Arrays::stream)
-                        .flatMap(Stream::findFirst)
-                        .map(z -> TypeVariableName.get(v.getName(), JavaPoetClassNameUtils.guessType(z)))
+                        .map(z -> TypeVariableName.get(v.getName(), JavaPoetClassNameUtils.guessTypes(z)))
                         .orElse(TypeVariableName.get(v.getName())))
                 .collect(Collectors.toList());
     }
