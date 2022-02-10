@@ -16,7 +16,11 @@ public interface JavaPoetClassNameUtils {
         String type = psiType.getCanonicalText();
         if (psiType instanceof PsiEllipsisType && StringUtils.contains(type, "...")) {
             PsiEllipsisType psiEllipsisType = (PsiEllipsisType)psiType;
-            return ArrayTypeName.of(guessType(psiEllipsisType.toArrayType().getDeepComponentType()));
+            return EllipsisTypeName.of(guessType(psiEllipsisType.toArrayType().getDeepComponentType()));
+        }
+        if (psiType instanceof PsiArrayType) {
+            PsiArrayType psiArrayType = (PsiArrayType) psiType;
+            return ArrayTypeName.of(guessType(psiArrayType.getDeepComponentType()));
         }
         if (psiType instanceof PsiWildcardType) {
             PsiWildcardType psiWildcardType = (PsiWildcardType) psiType;
