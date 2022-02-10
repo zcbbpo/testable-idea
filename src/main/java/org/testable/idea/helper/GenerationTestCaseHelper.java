@@ -19,6 +19,7 @@ import com.intellij.psi.*;
 import com.squareup.javapoet.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testable.idea.utils.ClassNameUtils;
 import org.testable.idea.utils.JavaPoetClassNameUtils;
 
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.intellij.testIntegration.createTest.CreateTestUtils.computeTestRoots;
 import static io.vavr.API.*;
@@ -138,12 +140,29 @@ public class GenerationTestCaseHelper {
                 .addMember("targetMethod", CodeBlock.builder().add("$S", method.getName()).build())
                 .build();
         return MethodSpec.methodBuilder(method.getName())
+                .addTypeVariables(transformTypeVariables(method.getTypeParameterList()))
                 .addAnnotation(mockInvokeAnnotation)
                 .addParameters(transformParameter(method.getParameterList().getParameters()))
                 .addCode(returnBody(returnType))
                 .returns(returnType)
                 .addModifiers(transformModifier(method.getModifierList()))
                 .build();
+    }
+
+    private List<TypeVariableName> transformTypeVariables(PsiTypeParameterList typeParameterList) {
+        if (typeParameterList == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(typeParameterList.getTypeParameters())
+                .filter(v -> StringUtils.isNotBlank(v.getName()))
+                .map(v -> Optional.of(v)
+                        .map(PsiTypeParameter::getExtendsList)
+                        .map(PsiReferenceList::getReferencedTypes)
+                        .map(Arrays::stream)
+                        .flatMap(Stream::findFirst)
+                        .map(z -> TypeVariableName.get(v.getName(), JavaPoetClassNameUtils.guessType(z)))
+                        .orElse(TypeVariableName.get(v.getName())))
+                .collect(Collectors.toList());
     }
 
     private CodeBlock returnBody(TypeName returnType) {

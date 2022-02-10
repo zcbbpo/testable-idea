@@ -18,6 +18,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.ClassUtil;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.testable.idea.helper.GenerationTestCaseHelper;
@@ -41,6 +42,7 @@ public class GenerateMethodToTestCaseAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+        final Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
 
         PsiElement element = (PsiElement) e.getDataContext().getData("psi.Element");
 
@@ -48,12 +50,27 @@ public class GenerateMethodToTestCaseAction extends AnAction {
             return;
         }
         PsiMethod psiMethod = (PsiMethod) element;
-        PsiClass containingClass = psiMethod.getContainingClass();
+
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (psiFile == null) {
+            return;
+        }
+
+        if (!(psiFile instanceof PsiJavaFile)) {
+            return;
+        }
+
+        PsiClass[] containingClasses = ((PsiJavaFile) psiFile).getClasses();
+        if (ArrayUtils.isEmpty(containingClasses)) {
+            return;
+        }
+
+        PsiClass containingClass = containingClasses[0];
         if (containingClass == null) {
             return;
         }
 
-        Module srcModule = findModuleForPsiElement(element);
+        Module srcModule = findModuleForPsiElement(containingClass);
         if (srcModule == null) {
             return;
         }
