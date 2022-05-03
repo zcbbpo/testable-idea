@@ -2,8 +2,6 @@ package org.testable.idea.helper;
 
 import com.alibaba.testable.core.annotation.MockInvoke;
 import com.google.common.collect.Lists;
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -13,6 +11,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -20,6 +19,7 @@ import com.squareup.javapoet.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.testable.idea.helper.intellij.CreateTestUtils;
 import org.testable.idea.utils.ClassNameUtils;
 import org.testable.idea.utils.JavaPoetClassNameUtils;
 
@@ -34,9 +34,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static com.intellij.testIntegration.createTest.CreateTestUtils.computeTestRoots;
+//import com.intellij.testIntegration.createTest.CreateTestUtils;
 import static io.vavr.API.*;
 
 /**
@@ -60,7 +59,7 @@ public class GenerationTestCaseHelper {
         if (srcModule == null) {
             return;
         }
-        List<VirtualFile> testRootUrls = computeTestRoots(srcModule);
+        List<VirtualFile> testRootUrls = CreateTestUtils.computeTestRoots(srcModule);
 
         if (CollectionUtils.isEmpty(testRootUrls)) {
             return;
@@ -82,9 +81,10 @@ public class GenerationTestCaseHelper {
             try {
                 Path testFilePath = generationTestFile(bizService, testVirtualFile, methods);
                 VfsUtil.markDirtyAndRefresh(false, true, true, ProjectRootManager.getInstance(openProject).getContentRoots());
-                NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-                        .createNotification(testJavaFile + " File created success", NotificationType.INFORMATION)
-                        .notify(openProject);
+//                NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
+//                        .createNotification(testJavaFile + " File created success", NotificationType.INFORMATION)
+//                        .notify(openProject);
+                Messages.showMessageDialog(openProject, testJavaFile + " File created success", "Create Success", null);
                 VirtualFile virtualFile = VfsUtil.findFile(testFilePath, true);
                 if (virtualFile != null) {
                     FileEditorManager.getInstance(openProject).openTextEditor(new OpenFileDescriptor(openProject, virtualFile), true);

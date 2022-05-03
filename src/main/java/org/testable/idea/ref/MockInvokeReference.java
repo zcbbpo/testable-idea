@@ -26,7 +26,7 @@ public class MockInvokeReference extends PsiReferenceBase<PsiElement> implements
     }
 
     @Override
-    public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
+    public ResolveResult [] multiResolve(boolean incompleteCode) {
         return psiMethodCallExpressions.stream().map(PsiElementResolveResult::new).toArray(ResolveResult[]::new);
     }
 
@@ -38,7 +38,7 @@ public class MockInvokeReference extends PsiReferenceBase<PsiElement> implements
     }
 
     @Override
-    public Object @NotNull [] getVariants() {
+    public Object[] getVariants() {
         return psiMethodCallExpressions.stream()
                 .map(v -> LookupElementBuilder
                         .create(v).withIcon(EmptyIcon.ICON_13)

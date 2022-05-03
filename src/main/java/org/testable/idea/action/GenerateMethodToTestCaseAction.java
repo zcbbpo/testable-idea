@@ -1,8 +1,6 @@
 package org.testable.idea.action;
 
 import com.google.common.collect.Lists;
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -11,6 +9,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
@@ -30,8 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.intellij.openapi.module.ModuleUtilCore.findModuleForPsiElement;
-import static com.intellij.testIntegration.createTest.CreateTestUtils.computeTestRoots;
+import com.intellij.openapi.module.ModuleUtilCore;
+import org.testable.idea.helper.intellij.CreateTestUtils;
 
 /**
  * @author jim
@@ -70,11 +69,11 @@ public class GenerateMethodToTestCaseAction extends AnAction {
             return;
         }
 
-        Module srcModule = findModuleForPsiElement(containingClass);
+        Module srcModule = ModuleUtilCore.findModuleForPsiElement(containingClass);
         if (srcModule == null) {
             return;
         }
-        List<VirtualFile> testRootUrls = computeTestRoots(srcModule);
+        List<VirtualFile> testRootUrls = CreateTestUtils.computeTestRoots(srcModule);
 
         String testJavaFile = containingClass.getQualifiedName() + "Test";
         String mockJavaFile = containingClass.getQualifiedName() + "Mock";
@@ -144,9 +143,10 @@ public class GenerateMethodToTestCaseAction extends AnAction {
             }
             JavaCodeStyleManager.getInstance(project).shortenClassReferences(testClass);
             String msg = MessageFormat.format("The {0} mock-method was add to {1} success.", selectedMethod.getName(), testClass.getName());
-            NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-                    .createNotification(msg, NotificationType.INFORMATION)
-                    .notify(project);
+//            NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
+//                    .createNotification(msg, NotificationType.INFORMATION)
+//                    .notify(project);
+            Messages.showYesNoDialog(msg, "Custom Notification", null);
             LOG.debug("The test class mock created success");
         });
     }
