@@ -7,9 +7,9 @@ It implements method of copy mock signature, navigate to mock method and auto ge
 
 ## Build it
 
-Java 11 is required.
+Java 8 is required.
 
-```
-./gradlew clean build
-```
+IDEA 2019.2 or above
+
+
 
