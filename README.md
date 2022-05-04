@@ -21,7 +21,7 @@ You can use testable-idea-1.3.5.beta.zip directly.
 You need to right click when the cursor is in the method name or just the method name is selected.
 
 ## TODO
-Some errors exist in this version. It seems that you may have to try many times to copy or generate mock methods.
+When the IDEA starts up, the error "java.lang.UnsatisfiedLinkError: Unable to load library 'CoreFoundation'" may exist, but it does not influence the use of this plugin.
 
 
 
