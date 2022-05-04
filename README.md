@@ -18,6 +18,8 @@ IDEA 2019.2 is required
 ## Use it
 You can use testable-idea-1.3.5.beta.zip directly.
 
+You need to right click when the cursor is in the method name or just the method name is selected.
+
 ## TODO
 Some errors exist in this version. It seems that you may have to try many times to copy or generate mock methods.
 

@@ -28,6 +28,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.intellij.openapi.module.ModuleUtilCore;
 import org.testable.idea.helper.intellij.CreateTestUtils;
@@ -124,6 +125,7 @@ public class GenerateMethodToTestCaseAction extends AnAction {
             return;
         }
         PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+        AtomicReference<String> tip = new AtomicReference<>("");
         WriteCommandAction.runWriteCommandAction(project, () -> {
             MethodSpec methodSpec = GenerationTestCaseHelper.getInstance().transformMethod(selectedMethod, selectedClass.getQualifiedName());
 
@@ -146,9 +148,12 @@ public class GenerateMethodToTestCaseAction extends AnAction {
 //            NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
 //                    .createNotification(msg, NotificationType.INFORMATION)
 //                    .notify(project);
-            Messages.showYesNoDialog(msg, "Custom Notification", null);
+
             LOG.debug("The test class mock created success");
+            tip.set(msg);
         });
+        //  shift tip into here in case of error
+        Messages.showInfoMessage(tip.get(), "Insert mock method");
     }
 
     private boolean isChild(VirtualFile parent, VirtualFile child) {

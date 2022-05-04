@@ -33,9 +33,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
-//import com.intellij.testIntegration.createTest.CreateTestUtils;
 import static io.vavr.API.*;
 
 /**
@@ -77,6 +76,7 @@ public class GenerationTestCaseHelper {
             return;
         }
 
+        AtomicReference<String> tip = new AtomicReference<>("");
         WriteCommandAction.runWriteCommandAction(openProject, () -> {
             try {
                 Path testFilePath = generationTestFile(bizService, testVirtualFile, methods);
@@ -84,17 +84,18 @@ public class GenerationTestCaseHelper {
 //                NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
 //                        .createNotification(testJavaFile + " File created success", NotificationType.INFORMATION)
 //                        .notify(openProject);
-                Messages.showMessageDialog(openProject, testJavaFile + " File created success", "Create Success", null);
                 VirtualFile virtualFile = VfsUtil.findFile(testFilePath, true);
                 if (virtualFile != null) {
                     FileEditorManager.getInstance(openProject).openTextEditor(new OpenFileDescriptor(openProject, virtualFile), true);
                 }
+                tip.set(testJavaFile + " File created success");
                 //EditSourceUtil.navigate();
             } catch (IOException e) {
-                // TODO notify to user
+                tip.set(testJavaFile + " File created fail");
                 LOG.warn("Generation Testcase fail", e);
             }
         });
+        Messages.showInfoMessage(openProject, tip.get(), "Create Test Class");
     }
 
     public Path generationTestFile(PsiClass bizService, VirtualFile testVirtualFile, List<PsiMethod> selectMethodList) throws IOException {
