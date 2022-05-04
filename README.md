@@ -9,17 +9,17 @@ It implements method of copy mock signature, navigate to mock method and auto ge
 
 Java 8 is required.
 
-IDEA 2019.2 or above is required
+IDEA 2019.2 is required
 
 ```shell script
 ./gradle clean build
 ```
 
 ## Use it
-You can use testable-idea-1.3.5.beat.zip this plugin file.
+You can use testable-idea-1.3.5.beta.zip directly.
 
 ## TODO
-Some errors exists. You may have to try many times to copy or generate the mock method.
+Some errors exist in this version. It seems that you may have to try many times to copy or generate mock methods.
 
 
 
