@@ -35,6 +35,8 @@ patchPluginXml {
       v1.3.5.beta<br><ul>
       <li>Compatible for 2019.2 IDEA</li>
       </ul>"""
+    sinceBuild = '191'
+    untilBuild = '221'
 }
 test {
     useJUnitPlatform()
