@@ -1,6 +1,7 @@
 plugins {
     id("java")
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij gradle 插件
+    // 降低gradle插件版本，适配低版本IDEA
     id "org.jetbrains.intellij" version "0.4.10"
 }
 
