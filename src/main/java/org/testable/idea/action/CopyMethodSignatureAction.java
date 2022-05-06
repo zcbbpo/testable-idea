@@ -31,7 +31,6 @@ public class CopyMethodSignatureAction extends AnAction {
         final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
 
         PsiElement element = (PsiElement) e.getDataContext().getData("psi.Element");
-//        Messages.showInfoMessage(project, "get element", "get element");
         if (!(element instanceof PsiMethod)) {
             return;
         }
@@ -55,9 +54,6 @@ public class CopyMethodSignatureAction extends AnAction {
                 .build();
         copyText2Clipboard(editor, project, javaFile.toString());
         Messages.showInfoMessage(project, method.getName() + " mock-method signature copied success", "Copy Success");
-//        NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-//                .createNotification(method.getName() + " mock-method signature copied success", NotificationType.INFORMATION)
-//                .notify(project);
     }
 
     private static void copyText2Clipboard(Editor editor, Project project, String text) {

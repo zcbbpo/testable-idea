@@ -14,14 +14,29 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.squareup.javapoet.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiReferenceList;
+import com.intellij.psi.PsiTypeParameter;
+import com.intellij.psi.PsiTypeParameterList;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.testable.idea.helper.intellij.CreateTestUtils;
 import org.testable.idea.utils.ClassNameUtils;
 import org.testable.idea.utils.JavaPoetClassNameUtils;
+import org.testable.idea.utils.ModuleUtils;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
@@ -35,7 +50,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import static io.vavr.API.*;
+
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
 
 /**
  * @author jim
@@ -58,7 +76,7 @@ public class GenerationTestCaseHelper {
         if (srcModule == null) {
             return;
         }
-        List<VirtualFile> testRootUrls = CreateTestUtils.computeTestRoots(srcModule);
+        List<VirtualFile> testRootUrls = ModuleUtils.computeTestRoots(srcModule);
 
         if (CollectionUtils.isEmpty(testRootUrls)) {
             return;
@@ -81,9 +99,6 @@ public class GenerationTestCaseHelper {
             try {
                 Path testFilePath = generationTestFile(bizService, testVirtualFile, methods);
                 VfsUtil.markDirtyAndRefresh(false, true, true, ProjectRootManager.getInstance(openProject).getContentRoots());
-//                NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-//                        .createNotification(testJavaFile + " File created success", NotificationType.INFORMATION)
-//                        .notify(openProject);
                 VirtualFile virtualFile = VfsUtil.findFile(testFilePath, true);
                 if (virtualFile != null) {
                     FileEditorManager.getInstance(openProject).openTextEditor(new OpenFileDescriptor(openProject, virtualFile), true);

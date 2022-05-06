@@ -2,15 +2,27 @@ package org.testable.idea.ref;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiAnnotationParameterList;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassObjectAccessExpression;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.PsiNameValuePair;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceContributor;
+import com.intellij.psi.PsiReferenceProvider;
+import com.intellij.psi.PsiReferenceRegistrar;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
+import io.vavr.Tuple;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * @author jim
@@ -20,6 +32,7 @@ public class MockInvokeReferenceContributor extends PsiReferenceContributor {
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
         registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiLiteralExpression.class),
                 new PsiReferenceProvider() {
+                    @NotNull
                     @Override
                     public PsiReference[] getReferencesByElement(@NotNull PsiElement element,
                                                                  @NotNull ProcessingContext context) {
@@ -56,14 +69,12 @@ public class MockInvokeReferenceContributor extends PsiReferenceContributor {
 
                         PsiNameValuePair[] attributes = parameterList.getAttributes();
 
-                        String targetClassName = getTargetClass(attributes);
-
-                        if (StringUtils.isBlank(targetClassName)) {
-                            PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-                            targetClassName = Optional.ofNullable(psiClass).map(PsiClass::getQualifiedName).orElse(null);
+                        PsiClass targetPsiClass = getTargetClass(attributes);
+                        if (targetPsiClass == null) {
+                            targetPsiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
                         }
 
-                        if (targetClassName == null) {
+                        if (targetPsiClass == null) {
                             return PsiReference.EMPTY_ARRAY;
                         }
 
@@ -74,20 +85,16 @@ public class MockInvokeReferenceContributor extends PsiReferenceContributor {
                         }
 
                         TextRange property = new TextRange(1, targetMethodName.length() + 1);
-                        return new PsiReference[]{new MockInvokeReference(element, property, targetClassName, targetMethodName)};
+                        return new PsiReference[]{new MockInvokeReference(element, property, targetPsiClass, targetMethodName)};
                     }
                 });
     }
 
-    private String getTargetClass(PsiNameValuePair[] attributes) {
+    private PsiClass getTargetClass(PsiNameValuePair[] attributes) {
         return getTarget(attributes, "targetClass");
     }
 
-    private String getTargetMethod(PsiNameValuePair[] attributes) {
-        return getTarget(attributes, "targetMethod");
-    }
-
-    private String getTarget(PsiNameValuePair[] attributes, String target) {
+    private PsiClass getTarget(PsiNameValuePair[] attributes, String target) {
         if (ArrayUtils.isEmpty(attributes)) {
             return null;
         }
@@ -100,7 +107,11 @@ public class MockInvokeReferenceContributor extends PsiReferenceContributor {
                 .filter(v -> v instanceof PsiClassObjectAccessExpression)
                 .map(v -> (PsiClassObjectAccessExpression) v)
                 .map(PsiClassObjectAccessExpression::getOperand)
-                .map(PsiTypeElement::getText)
+                .map(PsiElement::getFirstChild)
+                .filter(v -> v instanceof PsiJavaCodeReferenceElement)
+                .map(v -> (PsiJavaCodeReferenceElement) v)
+                .map(v -> Tuple.of(v.getProject(), v.getCanonicalText()))
+                .map(v -> JavaPsiFacade.getInstance(v._1).findClass(v._2, GlobalSearchScope.projectScope(v._1)))
                 .orElse(null);
     }
 }

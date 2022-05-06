@@ -23,11 +23,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <psi.referenceContributor implementation="org.testable.idea.ref.MockInvokeReferenceContributor"/>
-        <!--        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>-->
-
-        <!--        <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>-->
-
-        <!--        <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>-->
+        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>
+        <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
     </extensions>
 
     <resource-bundle>messages.BasicActionsBundle</resource-bundle>

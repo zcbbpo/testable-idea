@@ -8,10 +8,18 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.ClassUtil;
@@ -21,6 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.testable.idea.helper.GenerationTestCaseHelper;
+import org.testable.idea.utils.ModuleUtils;
 
 import javax.lang.model.element.Modifier;
 import java.nio.file.Paths;
@@ -29,9 +38,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.intellij.openapi.module.ModuleUtilCore;
-import org.testable.idea.helper.intellij.CreateTestUtils;
 
 /**
  * @author jim
@@ -74,7 +80,7 @@ public class GenerateMethodToTestCaseAction extends AnAction {
         if (srcModule == null) {
             return;
         }
-        List<VirtualFile> testRootUrls = CreateTestUtils.computeTestRoots(srcModule);
+        List<VirtualFile> testRootUrls = ModuleUtils.computeTestRoots(srcModule);
 
         String testJavaFile = containingClass.getQualifiedName() + "Test";
         String mockJavaFile = containingClass.getQualifiedName() + "Mock";
@@ -145,15 +151,12 @@ public class GenerateMethodToTestCaseAction extends AnAction {
             }
             JavaCodeStyleManager.getInstance(project).shortenClassReferences(testClass);
             String msg = MessageFormat.format("The {0} mock-method was add to {1} success.", selectedMethod.getName(), testClass.getName());
-//            NotificationGroupManager.getInstance().getNotificationGroup("Custom Notification Group")
-//                    .createNotification(msg, NotificationType.INFORMATION)
-//                    .notify(project);
 
             LOG.debug("The test class mock created success");
             tip.set(msg);
         });
         //  shift tip into here in case of error
-        Messages.showInfoMessage(tip.get(), "Insert mock method");
+        Messages.showInfoMessage(tip.get(), "Insert Mock Method");
     }
 
     private boolean isChild(VirtualFile parent, VirtualFile child) {
