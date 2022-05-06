@@ -1,4 +1,4 @@
-<idea-plugin require-restart="true">
+<idea-plugin>
     <id>org.testable.idea.testable-idea</id>
     <name>Testable-Mock Helper</name>
     <vendor email="jim.cao.jc@gmail.com" url="https://alibaba.github.io/testable-mock/">testable-mock</vendor>
@@ -9,9 +9,9 @@
     It implements method of copy mock signature, navigate to mock method and auto generate test class template
     ]]></description>
 
-<!--
-    <change-notes>Initial release of the plugin.</change-notes>
--->
+    <!--
+        <change-notes>Initial release of the plugin.</change-notes>
+    -->
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
@@ -23,11 +23,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <psi.referenceContributor implementation="org.testable.idea.ref.MockInvokeReferenceContributor"/>
-        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>
+        <!--        <annotator language="JAVA" implementationClass="org.testable.idea.annotator.KeywordAnnotator"/>-->
 
-        <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>
+        <!--        <notificationGroup id="Custom Notification Group" displayType="BALLOON"/>-->
 
-        <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
+        <!--        <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>-->
     </extensions>
 
     <resource-bundle>messages.BasicActionsBundle</resource-bundle>
@@ -36,8 +36,8 @@
         <!-- Add your actions here -->
         <action id="org.testable.idea.action.AutoGenerationTestCaseAction" class="org.testable.idea.action.AutoGenerationTestCaseAction">
             <add-to-group group-id="MainToolBar" anchor="last"/>
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+            <!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+            <!--            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>-->
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="org.testable.idea.action.CopyMethodSignatureAction" class="org.testable.idea.action.CopyMethodSignatureAction">

@@ -21,8 +21,8 @@ public class MockInvokeReferenceContributor extends PsiReferenceContributor {
         registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiLiteralExpression.class),
                 new PsiReferenceProvider() {
                     @Override
-                    public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element,
-                                                                           @NotNull ProcessingContext context) {
+                    public PsiReference[] getReferencesByElement(@NotNull PsiElement element,
+                                                                 @NotNull ProcessingContext context) {
                         PsiLiteralExpression psiLiteralExpression = (PsiLiteralExpression) element;
 
                         PsiElement pt = psiLiteralExpression.getParent();
