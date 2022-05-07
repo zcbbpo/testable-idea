@@ -7,7 +7,7 @@ plugins {
 
 group 'org.testable.idea'
 
-version '1.3.5.beta'
+version '1.3.6.beta'
 
 repositories {
     maven{ url 'https://maven.aliyun.com/repository/central' }
@@ -33,8 +33,8 @@ intellij {
 }
 patchPluginXml {
     changeNotes = """
-      v1.3.5.beta<br><ul>
-      <li>Compatible for 2019.2 IDEA</li>
+      v1.3.6.beta<br><ul>
+      <li>require restart</li>
       </ul>"""
     sinceBuild = '191'
     untilBuild = '221'
