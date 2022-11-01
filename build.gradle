@@ -37,7 +37,7 @@ patchPluginXml {
       <li>require restart</li>
       </ul>"""
     sinceBuild = '191'
-    untilBuild = '221'
+    untilBuild = '223'
 }
 test {
     useJUnitPlatform()
